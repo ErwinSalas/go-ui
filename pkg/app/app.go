@@ -26,10 +26,10 @@ func (m App) Build() internal.Widget {
 type MyHomePage struct {
 	Title         string
 	selectedIndex int
+	drawerOpen    bool
 }
 
 func (h *MyHomePage) Render() string {
-	// Llamar a Build y renderizar el resultado
 	return h.Build().Render()
 }
 
@@ -48,8 +48,9 @@ func (h *MyHomePage) Build() internal.Widget {
 			Title: h.Title,
 			Leading: internal.IconButton{
 				Icon:    "☰",
-				OnClick: h.openDrawer,
+				OnClick: h.toggleDrawer,
 				Class:   "menu-icon",
+				ID:      "menuButton", // Asignar un ID al botón
 			},
 		},
 		Body: internal.Center{
@@ -61,6 +62,7 @@ func (h *MyHomePage) Build() internal.Widget {
 				h.drawerItem("Business", 1),
 				h.drawerItem("School", 2),
 			},
+			Visible: h.drawerOpen, // Controlar la visibilidad del Drawer según el estado drawerOpen
 		},
 	}
 }
@@ -73,28 +75,54 @@ func (h *MyHomePage) drawerItem(label string, index int) internal.Widget {
 		OnTap: func() {
 			h.onItemTapped(index)
 		},
+		ID: fmt.Sprintf("drawerItem%d", index), // Asignar un ID a cada ítem del Drawer
 	}
 }
 
 // Método para manejar la selección de ítems del Drawer
 func (h *MyHomePage) onItemTapped(index int) {
 	h.selectedIndex = index
+	h.drawerOpen = false // Cerrar el Drawer al seleccionar un ítem
 	h.Rerender()
 }
 
-// Método para abrir el Drawer (simulado en este caso)
-func (h *MyHomePage) openDrawer() {
-	fmt.Println("Opening Drawer")
+// Método para abrir y cerrar el Drawer
+func (h *MyHomePage) toggleDrawer() {
+	h.drawerOpen = !h.drawerOpen
+	h.Rerender()
 }
 
 // Rerender fuerza el re-renderizado del componente
 func (h *MyHomePage) Rerender() {
 	document := js.Global().Get("document")
 	container := document.Call("getElementById", "app")
-	container.Set("innerHTML", h.Build().Render())
+	container.Set("innerHTML", h.Render())
+
+	// Asignar los manejadores de eventos después de renderizar
+	h.assignEventHandlers()
 }
 
-// main inicia la aplicación
+// Asignar los eventos a los elementos interactivos después de renderizar
+func (h *MyHomePage) assignEventHandlers() {
+	// Asignar el evento al botón de menú
+	menuButton := js.Global().Get("document").Call("getElementById", "menuButton")
+	menuButton.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		fmt.Println("Menu button clicked")
+		h.toggleDrawer()
+		return nil
+	}))
+
+	// Asignar los eventos a los ítems del Drawer
+	for i := 0; i < 3; i++ { // Sabemos que hay 3 ítems
+		index := i
+		item := js.Global().Get("document").Call("getElementById", fmt.Sprintf("drawerItem%d", index))
+		item.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			h.onItemTapped(index)
+			return nil
+		}))
+	}
+}
+
 func NewApp() {
 	// Crear la instancia de la aplicación
 	app := App{}
@@ -102,7 +130,16 @@ func NewApp() {
 	// Renderizar la aplicación inicial
 	document := js.Global().Get("document")
 	container := document.Call("getElementById", "app")
-	container.Set("innerHTML", app.Build().Render())
+	materialApp := app.Build().(internal.MaterialApp) // Convertir a MaterialApp
+
+	// Asegurarnos de que el Home es un MyHomePage
+	if homePage, ok := materialApp.Home.(*MyHomePage); ok {
+		container.Set("innerHTML", materialApp.Render())
+		// Asignar manejadores de eventos iniciales
+		homePage.assignEventHandlers()
+	} else {
+		panic("Home is not *MyHomePage")
+	}
 
 	// Mantener el programa en ejecución
 	select {}

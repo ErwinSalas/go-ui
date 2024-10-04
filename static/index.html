@@ -5,29 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Go Flutter-like App</title>
     <style>
-        /* Eliminar margen del cuerpo para que el AppBar esté alineado */
         body {
             margin: 0;
+            font-family: Arial, sans-serif;
         }
 
-        /* AppBar */
         .app-bar {
             background-color: #6200EE;
             color: white;
-            padding: 10px;
+            padding: 15px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            width: 100%; /* Asegurar que ocupe todo el ancho */
-            box-sizing: border-box; /* Asegurar que el padding no afecte el ancho */
-            margin: 0; /* Eliminar cualquier margen */
         }
-
-        .app-bar-actions {
-            display: flex;
-            gap: 10px;
-        }
-
         .menu-icon {
             font-size: 24px;
             background: none;
@@ -36,26 +25,22 @@
             cursor: pointer;
         }
 
-        /* Drawer */
         .drawer {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #FFFFFF;
+            background-color: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            transform: translateX(-100%);
             transition: transform 0.3s ease;
-        }
-
-        .drawer-visible {
-            transform: translateX(0);
-        }
-
-        .drawer-hidden {
             transform: translateX(-100%);
+            visibility: hidden;
+        }
+
+        .drawer[style*="visible"] {
+            visibility: visible;
+            transform: translateX(0);
         }
 
         /* Overlay for Drawer */
@@ -71,14 +56,11 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        /* Main content */
-        .page-container {
-            padding: 20px;
-        }
 
         .list-tile {
-            padding: 10px;
+            padding: 15px;
             border-bottom: 1px solid #ddd;
+            cursor: pointer;
         }
 
         .list-tile.selected {
@@ -97,6 +79,8 @@
     </style>
 </head>
 <body>
+    <!-- Drawer Overlay -->
+    <div id="drawerOverlay"></div>
     <div id="app"></div>
 
     <script src="wasm_exec.js"></script>

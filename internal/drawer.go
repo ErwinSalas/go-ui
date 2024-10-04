@@ -26,24 +26,23 @@ func NewDrawer(items []Widget, class string, id string) *Drawer {
 	}
 }
 
-// Render genera el HTML del Drawer
-func (d *Drawer) Render() string {
+// Render genera el HTML para Drawer, controlando su visibilidad
+func (d Drawer) Render() string {
+	fmt.Printf("Rendering Drawer %t", d.Visible)
+	visibility := "hidden"
+	if d.Visible {
+		visibility = "visible"
+	}
+
 	content := ""
 	for _, item := range d.Items {
 		content += item.Render()
 	}
-
-	// Clase para mostrar/ocultar el Drawer
-	visibleClass := "drawer-hidden"
-	if d.Visible {
-		visibleClass = "drawer-visible"
-	}
-
 	return fmt.Sprintf(`
-		<div id="%s" class="drawer %s %s">
+		<div class="drawer" style="visibility: %s;">
 			%s
 		</div>
-	`, d.ID, d.Class, visibleClass, content)
+	`, visibility, content)
 }
 
 // Método para abrir el Drawer

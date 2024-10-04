@@ -3,7 +3,10 @@
 
 package internal
 
-import "fmt"
+import (
+	"fmt"
+	"syscall/js"
+)
 
 // Widget base para todos los componentes
 type Widget interface {
@@ -73,12 +76,28 @@ func (t Text) Render() string {
 type IconButton struct {
 	Icon    string
 	Class   string
-	OnClick func()
+	OnClick func() // Función de callback para manejar el clic
+	ID      string
 }
 
-// Render genera el HTML para IconButton
+// Render genera el HTML para IconButton y asigna el evento en el DOM
 func (i IconButton) Render() string {
-	return fmt.Sprintf(`<button class="%s" onclick="goFunction()">%s</button>`, i.Class, i.Icon)
+	// Asignar el evento al botón
+	go assignIconButtonEvent(i.ID, i.OnClick)
+
+	return fmt.Sprintf(`<button id="%s" class="%s">%s</button>`, i.ID, i.Class, i.Icon)
+}
+
+// Asignar el evento de clic a un IconButton
+func assignIconButtonEvent(id string, onClick func()) {
+	// Obtener el elemento y asignar el evento de clic
+	button := js.Global().Get("document").Call("getElementById", id)
+	if !button.IsNull() {
+		button.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			onClick() // Llamar al manejador de clic definido
+			return nil
+		}))
+	}
 }
 
 // Center alinea su hijo en el centro
