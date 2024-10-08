@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"syscall/js"
 
-	"github.com/ErwinSalas/go-ui/internal/types"
+	"github.com/ErwinSalas/go-ui/pkg/ui/types"
 )
 
 func Mount(rootID string, w types.Widget) {

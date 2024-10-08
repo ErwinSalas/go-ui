@@ -6,7 +6,7 @@ package widgets
 import (
 	"fmt"
 
-	"github.com/ErwinSalas/go-ui/internal/dom"
+	"github.com/ErwinSalas/go-ui/pkg/ui/dom"
 )
 
 // listenForMount escucha el canal y asigna el evento cuando se monta

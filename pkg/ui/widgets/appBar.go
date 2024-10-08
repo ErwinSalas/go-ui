@@ -6,7 +6,7 @@ package widgets
 import (
 	"fmt"
 
-	"github.com/ErwinSalas/go-ui/internal/types"
+	"github.com/ErwinSalas/go-ui/pkg/ui/types"
 )
 
 // AppBar es la barra superior con título e íconos

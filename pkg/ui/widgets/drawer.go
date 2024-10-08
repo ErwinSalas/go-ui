@@ -6,7 +6,7 @@ package widgets
 import (
 	"fmt"
 
-	"github.com/ErwinSalas/go-ui/internal/types"
+	"github.com/ErwinSalas/go-ui/pkg/ui/types"
 )
 
 // Drawer es ahora un widget con estado que puede abrirse y cerrarse

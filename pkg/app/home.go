@@ -6,9 +6,9 @@ package app
 import (
 	"fmt"
 
-	"github.com/ErwinSalas/go-ui/internal/dom"
-	"github.com/ErwinSalas/go-ui/internal/types"
-	"github.com/ErwinSalas/go-ui/internal/widgets"
+	"github.com/ErwinSalas/go-ui/pkg/ui/dom"
+	"github.com/ErwinSalas/go-ui/pkg/ui/types"
+	"github.com/ErwinSalas/go-ui/pkg/ui/widgets"
 )
 
 // MyHomePage es un StatefulWidget

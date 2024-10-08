@@ -4,9 +4,9 @@
 package app
 
 import (
-	"github.com/ErwinSalas/go-ui/internal/dom"
-	"github.com/ErwinSalas/go-ui/internal/types"
-	"github.com/ErwinSalas/go-ui/internal/widgets"
+	"github.com/ErwinSalas/go-ui/pkg/ui/dom"
+	"github.com/ErwinSalas/go-ui/pkg/ui/types"
+	"github.com/ErwinSalas/go-ui/pkg/ui/widgets"
 )
 
 // App es un StatelessWidget
